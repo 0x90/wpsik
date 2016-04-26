@@ -915,45 +915,6 @@ class WpsScanner(object):
         except Exception, e:
             print 'Failure sending probe request to', essid, ':', e
 
-    # def send_probe_req_2(self, ssid):
-    #     """Return 802.11 Probe Request Frame."""
-    #     src = RandMAC() if self.mac is None else self.mac
-    #     self.logger.info('[!] Sending broadcast probe request: SRC=[%s] -> ESSID=[%s]' % (src, ssid))
-    #     src = get_list_from_addr(src)
-    #
-    #     # Frame Control
-    #     frameControl = dot11.Dot11()
-    #     frameControl.set_version(0)
-    #     frameControl.set_type_n_subtype(dot11.Dot11Types.DOT11_TYPE_MANAGEMENT_SUBTYPE_PROBE_REQUEST)
-    #     # Frame Control Flags
-    #     frameControl.set_fromDS(0)
-    #     frameControl.set_toDS(0)
-    #     frameControl.set_moreFrag(0)
-    #     frameControl.set_retry(0)
-    #     frameControl.set_powerManagement(0)
-    #     frameControl.set_moreData(0)
-    #     frameControl.set_protectedFrame(0)
-    #     frameControl.set_order(0)
-    #     # Management Frame
-    #     sequence = random.randint(0, 4096)
-    #     broadcast = [0xff, 0xff, 0xff, 0xff, 0xff, 0xff]
-    #     mngtFrame = dot11.Dot11ManagementFrame()
-    #     mngtFrame.set_duration(0)
-    #     mngtFrame.set_destination_address(broadcast)
-    #     mngtFrame.set_source_address(src)
-    #     mngtFrame.set_bssid(broadcast)
-    #     mngtFrame.set_fragment_number(0)
-    #     mngtFrame.set_sequence_number(sequence)
-    #     # Probe Request Frame
-    #     probeRequestFrame = dot11.Dot11ManagementProbeRequest()
-    #     probeRequestFrame.set_ssid(ssid)
-    #     probeRequestFrame.set_supported_rates([0x02, 0x04, 0x0b, 0x16])
-    #     # How is your daddy?802.11 B
-    #     mngtFrame.contains(probeRequestFrame)
-    #     frameControl.contains(mngtFrame)
-    #
-    #     return sendp(frameControl.get_packet(), iface=self.interface, verbose=0)
-
     def sniff(self, channel=None, timeout=None):
         if self._stop:
             return
