@@ -17,6 +17,20 @@ import signal
 import struct
 import subprocess
 import time
+from sys import platform
+
+LINUX = False
+OSX = False
+AIRPORT = "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
+
+# Detect platform
+if platform == "linux" or platform == "linux2":
+    LINUX = True
+elif platform == "darwin":
+    OSX = True
+elif platform == "win32":
+    print('Windows is not supported!')
+    raise NotImplemented
 
 # external dependencies
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
@@ -718,6 +732,9 @@ class WpsScanner(object):
         self.logger.addHandler(fh)
 
     def set_mode(self, mode):
+        if OSX:
+            return
+
         self.logger.debug('Enabling %s mode on %s' % (mode, self.interface))
         os.system('ifconfig %s down' % self.interface)
         os.system('iwconfig %s mode %s' % (self.interface, mode))
@@ -729,7 +746,12 @@ class WpsScanner(object):
         #                         (self.interface, self.interface, self.interface), shell=True).communicate()
 
     def set_channel(self, channel):
-        os.system('iwconfig %s channel %s' % (self.interface, channel))
+        if LINUX:
+            os.system('iwconfig %s channel %s' % (self.interface, channel))
+        elif OSX:
+            subprocess.call(['sudo',AIRPORT,'--channel=' + str(channel)])
+            # os.system('%s %s --channel=%s' % (AIRPORT ,self.interface, channel))
+
 
     def signal_handler(self, frame, code):
         # print("Ctrl+C caught. Exiting..")
@@ -791,10 +813,10 @@ class WpsScanner(object):
             print('WPSINFO', wi)
 
             # ACTIVE MODE
-            if wps and not self.passive and bssid not in self.probes_sent:
-                self.send_probe_req(essid)
-                # self.send_probe_req_2(essid)
-                self.probes_sent.append(bssid)
+            # if wps and not self.passive and bssid not in self.probes_sent:
+            #     self.send_probe_req(essid)
+            #     # self.send_probe_req_2(essid)
+            #     self.probes_sent.append(bssid)
 
         except Exception as e:
             print('Error while parsing beacon')
@@ -810,7 +832,7 @@ class WpsScanner(object):
             essid = probe.get_ssid()
 
             # If null byte in the SSID IE, its cloacked.
-            if essid.find("\x00") != -1:
+            if essid is None or essid.find("\x00") != -1:
                 essid = "<No ssid>"
 
             if bssid in self.aps:
