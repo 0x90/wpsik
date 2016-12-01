@@ -12,6 +12,8 @@ setup(
         'scapy',
         'impacket',
         'prettytable',
+        'coloredlogs',
+        'colorama',
     ],
     entry_points='''
         [console_scripts]
