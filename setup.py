@@ -1,22 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Setup script for wpsik
-from setuptools import setup
+from setuptools import setup, find_packages
+from sys import platform
 
-setup(
-    name='wpsik',
-    version='0.1',
-    py_modules=['wpsik'],
-    install_requires=[
+requirements =[
         'Click',
-        'scapy',
+        'scapy<2.3.3',
+        'pcapy',
+        'netaddr',
         'impacket',
         'prettytable',
         'coloredlogs',
-        'colorama',
-    ],
+        'colorama']
+
+if platform == "linux" or platform == "linux2":
+    requirements.append('pyric')
+elif platform == "darwin":
+    requirements.append('pyobjc')
+elif platform == "win32":
+    raise NotImplemented
+
+setup(
+    name='wpsik',
+    version='0.2',
+    packages=find_packages(),
+    install_requires=requirements,
     entry_points='''
         [console_scripts]
-        wpsik=wpsik:cli
+        wpsik=wpsik.cli:cli
     ''',
 )
