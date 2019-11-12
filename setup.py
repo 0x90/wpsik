@@ -24,6 +24,8 @@ elif platform == "win32":
 setup(
     name='wpsik',
     version='0.2',
+    license='GPL',
+    author='0x90',
     packages=find_packages(),
     install_requires=requirements,
     entry_points='''
