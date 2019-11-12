@@ -6,7 +6,7 @@ from sys import platform
 
 requirements =[
         'Click',
-        'scapy<2.3.3',
+        'scapy',
         'pcapy',
         'netaddr',
         'impacket',
